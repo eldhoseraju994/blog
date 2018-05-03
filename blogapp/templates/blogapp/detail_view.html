@@ -1,0 +1,65 @@
+{% extends 'blogapp/base.html' %}
+
+	{% block content %}
+
+
+	<section class="blog-area section">
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-sm-12">
+						
+						
+							<div class="box"  
+							  	<div class="img-responsive"><a href=""><img src="{{object.img.url}}" alt="Blog Image"  width="100%"></a></div>
+								
+								<div class="blog-info">
+
+									<h3 class="title"><a href="#">{{ object.title }}</a></h3>
+									<h4 class="author">{{object.author}}<a href="#"><b></b></a></h4>
+									<h5 class="author">{{object.published_date}}<a href="#"><b></b></a></h5>
+									<h5 class="author">{{object.caption}}<a href="#"><b></b></a></h5>
+									<h5 class="author">{{object.text}}<a href="#"><b></b></a></h6>
+
+
+									<ul class="post-footer">
+										<li><a href="#"><i class="ion-heart"></i>57</a></li>
+										<li><a href="#"><i class="ion-chatbubble"></i>6</a></li>
+										<li><a href="#"><i class="ion-eye"></i>138</a></li>
+									</ul>
+
+								</div><!-- blog-info -->
+							</div>
+
+  					
+				</div><!-- col-lg-4 col-md-6 -->
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	  
+
+
+
+
+	<!--fields = ('title', 'author','caption','text','img')

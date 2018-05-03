@@ -1,0 +1,49 @@
+
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Blogap</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{% static 'blogapp/css/blogapp.css' %}">
+
+
+<link rel="stylesheet" href="{% static 'blogapp/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'blogapp/css/responsive.css' %}">
+<link rel="stylesheet" href="{% static 'blogapp/css/ionicons.css' %}">
+<link rel="stylesheet" href="{% static 'blogapp/css/bootstrap.css' %}">
+  
+
+    </head>
+    <body>
+
+        <header>
+        <h1>Blogapppp</h1>
+            <div class="page-header">
+                    <a href="{% url 'Add_User' %}" class="top-menu">Register <span class="glyphicon glyphicon-plus"></span></a>
+            <ul class="main-menu visible-on-click" id="main-menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Categories</a></li>
+                <li><a href="#">Features</a></li>
+            </ul><!-- main-menu -->
+
+            <h1><a href="/">Blog</a></h1>
+            </div>
+    </header>
+
+
+
+
+
+
+
+
+     
+    	        {% block content %}
+
+                {% endblock %}
+           
+                 
+    </body>
+</html>
