@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.models import User   # fill in custom user info then save it 
 from django.contrib.auth.forms import UserCreationForm      
 from .models import UserProfile
-from .models import Blog
+from .models import Blog, Comment
 from django.contrib.auth import get_user_model
 from django import forms
 
@@ -31,8 +31,20 @@ class MyRegistrationForm(UserCreationForm):
                      return user
             		"""
 
-class NewBlog(forms.ModelForm):
+class NewBlogForm(forms.ModelForm):
 
     class Meta:
         model = Blog
         fields = ('title', 'author','caption','text','img')
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('text',)
+
+class LogInForm(forms.ModelForm):
+
+    class Meta:
+        model = UserProfile
+        fields = ( 'username', 'password')  

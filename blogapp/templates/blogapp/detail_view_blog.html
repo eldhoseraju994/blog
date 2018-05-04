@@ -1,0 +1,71 @@
+{% extends 'blogapp/base.html' %}
+
+	{% block content %}
+
+
+	<section class="blog-area section">
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-sm-12">
+						
+						
+							<div class="box" > 
+							  	<div class="img-responsive"><a href=""><img src="{{object.img.url}}" alt="Blog Image"  ></a></div>
+								
+								<div class="blog-info">
+
+									<h3 class="title"><a href="#">{{ object.title }}</a></h3>
+									<h4 class="author">{{object.author}}<a href="#"><b></b></a></h4>
+									<h5 class="author">{{object.published_date}}<a href="#"><b></b></a></h5>
+									<h5 class="author">{{object.caption}}<a href="#"><b></b></a></h5>
+									<h5 class="author">{{object.text}}<a href="#"><b></b></a></h6>
+
+									<hr>
+										<a class="btn btn-default" href="{% url 'add_comment_to_blog' pk=object.pk %}">Add comment</a>
+										{% for comment in blog.get_blog_comment.all %}
+										    <div class="comment">
+										        <div class="date">{{ comment.created_date }}</div>
+										        <p>{{ comment.text|linebreaks }}</p>
+										    </div>
+										{% empty %}
+										    <p>No comments here yet :(</p>
+										{% endfor %}
+
+
+
+								</div><!-- blog-info -->
+							</div>
+
+  					
+				</div><!-- col-lg-4 col-md-6 -->
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	  
+
+
+
+
+	<!--fields = ('title', 'author','caption','text','img')

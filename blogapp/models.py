@@ -40,15 +40,16 @@ class UserProfile(AbstractUser):
 	def __str__(self):
 		return self.first_name,self.last_name
 
-class Comments(models.Model):
-	"""docstring for Register"""
-	blogid = models.CharField(max_length=50,blank=True, null=True)
-	userid = models.CharField(max_length=50,blank=True, null=True)
-	comments =models.CharField(max_length=50,blank=True, null=True)
-	rply = models.CharField(max_length=50,blank=True, null=True)
-	
-	def publish(self):
-		self.save()
+#https://tutorial-extensions.djangogirls.org/en/homework_create_more_models/
+class Comment(models.Model):
+    blog= models.ForeignKey(Blog, related_name='get_blog_comment',on_delete=models.CASCADE)
+    text = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+    approved_comment = models.BooleanField(default=True)
 
-	def __str__(self):
-		return self.first_name,self.last_name
+    def approve(self):
+        self.approved_comment = True
+        self.save()
+
+    def __str__(self):
+        return self.text

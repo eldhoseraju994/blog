@@ -1,0 +1,64 @@
+{% extends 'blogapp/base.html' %}
+
+	{% block content %}
+
+
+	<section class="blog-area section">
+		<div class="container">
+
+			<div class="row">
+
+				
+						
+							{% for post in blog %}
+						<div class="col-sm-4">
+							<div class="box"  
+							  	<div class="img-responsive image-height"><a href="{%  url 'blog_detail' pk=post.pk %}"><img src="{{post.img.url}}" alt="Blog Image"  width="100%"></a></div>
+								
+								<div class="blog-info">
+
+									<h4 class="title"><a href="#">{{ post.title }}</a></h4>
+									<h3 class="author">{{post.author}}<a href="#"><b></b></a></h3>
+
+									<ul class="post-footer">
+										<!--<li><a href="#"><i class="ion-heart"></i>57</a></li>-->
+										<li>
+										<a href="{% url 'blog_detail' pk=post.pk %}">Comments: {{post.get_blog_comment.count}}</a></li>
+										<!--<li><a href="#"><i class="ion-eye"></i>138</a></li>-->
+									</ul>
+
+								</div><!-- blog-info -->
+						</div>
+
+  							{% endfor %}
+						
+				</div><!-- col-lg-4 col-md-6 -->
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	  
+
+
+
+
+	<!--fields = ('title', 'author','caption','text','img')
