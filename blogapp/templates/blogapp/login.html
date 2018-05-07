@@ -4,10 +4,11 @@
 
 <div class="container">
 <h2>Login</h2>
-<form method="post">
+<form method="post" novalidate>
   {% csrf_token %}
-  {{ form.as_p }}
+    {{ form.as_p }}
   <button type="submit">Login</button>
+
 </form>
 </div>
 

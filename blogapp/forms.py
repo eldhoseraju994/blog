@@ -12,7 +12,7 @@ class MyRegistrationForm(UserCreationForm):
     
     class Meta:
     	model = UserProfile
-    	fields = ('first_name', 'last_name','username','password')
+    	fields = ('first_name', 'last_name','username')
 
     """def save(self,commit = False):   
                     user = super(MyRegistrationForm, self).save(commit = False)
@@ -43,8 +43,13 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ('text',)
 
-class LogInForm(forms.ModelForm):
+class LoginForm(forms.Form):
+    username=forms.CharField()
+    password=forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model = UserProfile
-        fields = ( 'username', 'password')  
+        fields = ('username','password' )
+
+    # def clean(self):
+    #     return self.cleaned_data

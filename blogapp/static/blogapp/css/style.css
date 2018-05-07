@@ -4,6 +4,10 @@
 .image-height{
 	height: 200px
 }
+
 .comment {
     margin: 20px 0px 20px 20px;
+}
+.class-rply{
+	padding-top: 60px;
 }

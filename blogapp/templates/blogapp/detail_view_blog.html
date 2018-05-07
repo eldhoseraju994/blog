@@ -18,17 +18,27 @@
 
 									<h3 class="title"><a href="#">{{ object.title }}</a></h3>
 									<h4 class="author">{{object.author}}<a href="#"><b></b></a></h4>
-									<h5 class="author">{{object.published_date}}<a href="#"><b></b></a></h5>
-									<h5 class="author">{{object.caption}}<a href="#"><b></b></a></h5>
-									<h5 class="author">{{object.text}}<a href="#"><b></b></a></h6>
+									<span class="author">{{object.published_date}}<a href="#"><b></b></a></span>
+									<h6 class="author">{{object.caption}}<a href="#"><b></b></a></h6>
+									<span class="author">{{object.text}}<a href="#"><b></b></a></span>
 
 									<hr>
 										<a class="btn btn-default" href="{% url 'add_comment_to_blog' pk=object.pk %}">Add comment</a>
 										{% for comment in blog.get_blog_comment.all %}
-										    <div class="comment">
-										        <div class="date">{{ comment.created_date }}</div>
-										        <p>{{ comment.text|linebreaks }}</p>
-										    </div>
+
+                                                <div class="row comment">
+                                                    <div class="col-sm-3"></div>
+
+                                                        <h3></h3>
+
+                                                    <div class="col-sm-4" align="left">
+                                                        <div> <span><h3>{{comment.username }}</h3></span><span>{{comment.created_date}}</span>  </div>
+    										             {{ comment.text|linebreaks }}
+
+
+                                                    </div>
+                                                    <div class="col-sm-5 class-rply "  }><a class="hgt." href="">{{post.get_comment_reply.count}} Replys</a></div>
+										        </div>
 										{% empty %}
 										    <p>No comments here yet :(</p>
 										{% endfor %}
