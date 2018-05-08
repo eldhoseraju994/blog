@@ -32,6 +32,7 @@ class Blog(models.Model):
 
 class UserProfile(AbstractUser):
     """docstring for Register"""
+
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     # user = models.CharField(max_length=50,blank=True, null=True)
@@ -42,23 +43,22 @@ class UserProfile(AbstractUser):
         self.save()
 
     def __str__(self):
-        return self.first_name, self.last_name
+        return self.username
 
 
 # https://tutorial-extensions.djangogirls.org/en/homework_create_more_models/
 class Comment(models.Model):
-    blog = models.ForeignKey(Blog, related_name='get_blog_comment', on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog, related_name='get_blog_comment', on_delete=models.CASCADE,blank=True, null=True)
     parent_comment = models.ForeignKey('blogapp.Comment', related_name='get_comment_reply', blank=True, null=True, on_delete=models.CASCADE)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     approved_comment = models.BooleanField(default=True)
-    username = models.CharField(max_length=50, blank=True, null=True)
+    username = models.ForeignKey(UserProfile, max_length=50, blank=True, null=True, on_delete=models.CASCADE)
 
 
     def approve(self):
         self.approved_comment = True
         self.save()
-
 
     def __str__(self):
         return self.text

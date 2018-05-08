@@ -1,0 +1,40 @@
+{% extends 'blogapp/base.html' %}
+
+	{% block content %}
+     {% for comment in comment.get_comment_reply.all %}
+
+            <div class="row comment">
+                <div class="col-sm-3"></div>
+
+                    <h3></h3>
+
+                <div class="col-sm-4" align="left">
+                    <div> <span><h3>{{comment.username }}</h3></span><span>{{comment.created_date}}</span>  </div>
+                     {{ comment.text|linebreaks }}
+
+
+                </div>
+                <div class="col-sm-5 class-rply "  }><a class="hgt" href="">{{post.get_comment_reply.count}} Replys</a></div>
+            </div>
+    {% empty %}
+        <p>No comments here yet :(</p>
+    {% endfor %}
+
+
+
+
+
+    <h1>Send Reply</h1>
+           <div class="container">
+			<div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8">
+                        <form method="POST" class="post-form">{% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="save btn btn-default">Send</button>
+                        </form>
+                 </div>
+                 <div class="col-sm-2"></div>
+            </div>
+        </div>
+{% endblock %}

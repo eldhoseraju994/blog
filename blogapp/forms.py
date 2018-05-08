@@ -39,6 +39,21 @@ class NewBlogForm(forms.ModelForm):
 
 class CommentForm(forms.ModelForm):
 
+    text = forms.CharField(max_length=200)
+
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
+        self.fields['text'].widget.attrs['class'] = 'my_text'
+
+    class Meta:
+        model = Comment
+        fields = ('text',)
+
+#ReplyForm not used any where
+class ReplyForm(forms.ModelForm):
+
+    text=forms.CharField(max_length=50)
+
     class Meta:
         model = Comment
         fields = ('text',)

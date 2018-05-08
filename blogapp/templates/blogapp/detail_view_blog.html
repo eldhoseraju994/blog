@@ -1,59 +1,135 @@
 {% extends 'blogapp/base.html' %}
 
-	{% block content %}
+{% block content %}
 
 
-	<section class="blog-area section">
-		<div class="container">
+    <section class="blog-area section">
+        <div class="container">
 
-			<div class="row">
+            <div class="row">
 
-				<div class="col-sm-12">
-						
-						
-							<div class="box" > 
-							  	<div class="img-responsive"><a href=""><img src="{{object.img.url}}" alt="Blog Image"  ></a></div>
-								
-								<div class="blog-info">
-
-									<h3 class="title"><a href="#">{{ object.title }}</a></h3>
-									<h4 class="author">{{object.author}}<a href="#"><b></b></a></h4>
-									<span class="author">{{object.published_date}}<a href="#"><b></b></a></span>
-									<h6 class="author">{{object.caption}}<a href="#"><b></b></a></h6>
-									<span class="author">{{object.text}}<a href="#"><b></b></a></span>
-
-									<hr>
-										<a class="btn btn-default" href="{% url 'add_comment_to_blog' pk=object.pk %}">Add comment</a>
-										{% for comment in blog.get_blog_comment.all %}
-
-                                                <div class="row comment">
-                                                    <div class="col-sm-3"></div>
-
-                                                        <h3></h3>
-
-                                                    <div class="col-sm-4" align="left">
-                                                        <div> <span><h3>{{comment.username }}</h3></span><span>{{comment.created_date}}</span>  </div>
-    										             {{ comment.text|linebreaks }}
+                <div class="col-sm-12">
 
 
-                                                    </div>
-                                                    <div class="col-sm-5 class-rply "  }><a class="hgt." href="">{{post.get_comment_reply.count}} Replys</a></div>
-										        </div>
-										{% empty %}
-										    <p>No comments here yet :(</p>
-										{% endfor %}
+                    <div class="box">
+                        <div class="img-responsive"><a href=""><img src="{{ object.img.url }}" alt="Blog Image"></a>
+                        </div>
+
+                        <div class="blog-info">
+
+                            <h3 class="title"><a href="#">{{ object.title }}</a></h3>
+                            <h4 class="author">{{ object.author }}<a href="#"><b></b></a></h4>
+                            <span class="author">{{ object.published_date }}<a href="#"><b></b></a></span>
+                            <h6 class="author">{{ object.caption }}<a href="#"><b></b></a></h6>
+                            <sapan class="author">{{ object.text }}<a href="#"><b></b></a></sapan>
+
+                            <hr>
+
+                            <!--<a class="btn btn-default" href="{% url 'add_comment_to_blog' pk=object.pk %}">Add
+                                comment</a>-->
+                            {% for comment in blog.get_blog_comment.all %}
+
+                                <div class="row comment">
+                                    <div class="col-sm-3"></div>
+
+                                    <h3></h3>
+
+                                    <div class="col-sm-4" align="left">
+                                        <div><span><h3>{{ comment.username }}</h3></span><span>   </span></span>
+                                            <span>{{ comment.created_date }}</span></div>
+                                        {{ comment.text|linebreaks }}
+
+
+                                    </div>
+                                    <div class="col-sm-5 class-rply " }><a class="hgt" id="reply-click"
+                                                                           href="{% url 'add_reply' pk=comment.pk %}">{{ comment.get_comment_reply.count }}
+                                        Replys</a></div>
+                                </div>
+                            {% empty %}
+                                <p>No comments here yet :(</p>
+                            {% endfor %}
 
 
 
-								</div><!-- blog-info -->
-							</div>
+                            <div id='comment-div' style="display: none;">
 
-  					
-				</div><!-- col-lg-4 col-md-6 -->
-			</div>
-		</div>
-	</section>
+                                <div class="row">
+                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-8">
+                                        Add Comment:<input type="text" class="txt-class" id="txt-id">
+                                        <button type="submit" class="save btn btn-default" id="id_save_button">Send
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-2"></div>
+                                </div>
+                            </div>
+                        </div><!-- blog-info -->
+
+                        <div></div>
+
+                        <!-- add-comment -->
+                    <div class="add-comment">
+
+                            <div id='comment-div' style="display: none;">
+                                <div class="row">
+                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-8">
+                                        Add Comment:<input type="text" class="txt-class" id="txt-id">
+                                        <button type="submit" class="save btn btn-default" id="id_save_button">Send
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-2"></div>
+                                </div>
+                            </div>
+                             <div class="div-btn">
+                                 <button class="btn btn-default" id="btn-id">ADD CMNT</button>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div><!-- col-lg-4 col-md-6 -->
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $('#btn-id').on('click', function () {
+            $('#comment-div').css("display", "block");
+            if( $('#txt-id').val())
+                $('#txt-id').val()=''
+        });
+
+        $("#id_save_button").on('click', function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'add_comment_to_blog' object.pk %}",
+                data: {
+                    'blog_id':{{ object.pk }},
+                    'comment': $('#txt-id').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data['comment']) {
+
+                        temp = '<div class="row comment"><div class="col-sm-3"></div><h3></h3><div class="col-sm-4" align="left"><div><span><h3>'+data['comment']+'</h3></span><span>   </span></span> <span>'+'now'+'</span></div>'+data['comment']+' </div> <div class="col-sm-5 class-rply " }><a class="hgt" id="reply-click"href="">0Replys</a></div> </div>'
+
+                       $(".blog-info").append(temp);
+                    }
+                }
+            });
+        });
+
+
+    </script>
+
+{% endblock js %}
 
 
 
@@ -73,9 +149,5 @@
 
 
 
-	  
 
-
-
-
-	<!--fields = ('title', 'author','caption','text','img')
+<!--fields = ('title', 'author','caption','text','img')

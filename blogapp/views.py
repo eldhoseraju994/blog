@@ -1,15 +1,18 @@
+import  json
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.views import View
+
 from .models import Blog, Comment, UserProfile
-from .forms import MyRegistrationForm, NewBlogForm, CommentForm, LoginForm
+from .forms import MyRegistrationForm, NewBlogForm, CommentForm, LoginForm, ReplyForm
 from django.shortcuts import redirect
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView 
 from django.views.generic.edit import FormView
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth import logout
 
 
@@ -60,28 +63,51 @@ class LogoutView(FormView):
         logout(request)
         return HttpResponseRedirect('/')
 
-class  AddCommentToBlogView(LoginRequiredMixin, CreateView):
+class  AddCommentToBlogView(LoginRequiredMixin, View):
+    model = Comment
+    # #form_class = CommentForm
+    # # context['reply'] = Reply.objects.all()
+    template_name ='blogapp/blog_detail.html'
+    #
+    # def form_valid(self, form):
+    #     #print (self.kwargs)
+    #     self.object = form.save(commit=False)
+    #     blog = Blog.objects.get(pk=self.kwargs.get('pk'))
+    #     userna= self.request.user.username
+    #     self.object.blog = blog
+    #     self.object.username=userna
+    #     self.object.save()
+    #     url = reverse('blog_detail', kwargs={'pk': int(self.kwargs.get('pk')) })
+    #     return HttpResponseRedirect(url)
+
+    def post(self, request, *args, **kwargs):
+        blog_id = request.POST.get('blog_id')
+        blog_obj=Blog.objects.get(id=blog_id)
+        comment = request.POST.get('comment')
+        obj = Comment.objects.create(blog=blog_obj,text=comment,username=self.request.user)
+        return HttpResponse(json.dumps({'comment': obj.text,'date':str(obj.created_date),'username':obj.username.username}), content_type="application/json")
+class  AddReplyToComment(CreateView):
     model = Comment
     form_class = CommentForm
     # context['reply'] = Reply.objects.all()
-    template_name ='blogapp/add_comment_to_blog.html'
+    template_name ='blogapp/add_reply.html'
 
     def get_context_data(self, **kwargs):
-        context = super(AddCommentToBlogView, self).get_context_data(**kwargs)
-        context['reply'] = Reply.objects.all()
-        return context
-        
-        
+       context = super(AddReplyToComment, self).get_context_data(**kwargs)
+       comment = Comment.objects.get(pk=self.kwargs.get('pk'))
+       context['comment'] = comment
+       return context
     def form_valid(self, form):
         #print (self.kwargs)
         self.object = form.save(commit=False)
-        blog = Blog.objects.get(pk=self.kwargs.get('pk'))
+        comment = Comment.objects.get(pk=self.kwargs.get('pk'))
         userna= self.request.user.username
-        self.object.blog = blog
+        self.object.parent_comment = comment
         self.object.username=userna
         self.object.save()
-        url = reverse('blog_detail', kwargs={'pk': int(self.kwargs.get('pk')) })
+        url = reverse('add_reply', kwargs={'pk': int(self.kwargs.get('pk')) })
         return HttpResponseRedirect(url)
+
 
 class NewBlogView(CreateView):
     model = Blog
