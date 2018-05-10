@@ -18,7 +18,7 @@
 <body>
 
 <header>
-    <h1>Blog for 666</h1>
+    <h1 align="center">Blog for 666</h1>
     <h5 align="right">{{ request.user.username }}</h5>
     <div class="page-header">
 
@@ -29,7 +29,7 @@
         {% endif %}
 
         <ul class="main-menu visible-on-click" id="main-menu">
-            <li><a href=""{% url 'blogs' %}"">Home</a></li>
+            <li><a href="{% url 'blogs' %}">Home</a></li>
             <li><a href="#">Categories</a></li>
             <li><a href="#">Features</a></li>
         </ul><!-- main-menu -->
@@ -41,15 +41,11 @@
 
 {% block content %}
 
+
+
+
+
 {% endblock %}
-
-
-
-
-
-
-
-
 
 <!--Footer-->
 <!--Footer-->

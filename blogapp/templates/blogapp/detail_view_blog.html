@@ -24,15 +24,16 @@
                             <sapan class="author">{{ object.text }}<a href="#"><b></b></a></sapan>
 
                             <hr>
-
+                        </div>
+                        <div class="comment-section" id="">
                             <!--<a class="btn btn-default" href="{% url 'add_comment_to_blog' pk=object.pk %}">Add
                                 comment</a>-->
+                            <button align="left" class="btn btn-default" id="btn-id">Add Comment</button>
                             {% for comment in blog.get_blog_comment.all %}
 
                                 <div class="row comment">
-                                    <div class="col-sm-3"></div>
 
-                                    <h3></h3>
+
 
                                     <div class="col-sm-4" align="left">
                                         <div><span><h3>{{ comment.username }}</h3></span><span>   </span></span>
@@ -41,34 +42,60 @@
 
 
                                     </div>
-                                    <div class="col-sm-5 class-rply " }><a class="hgt" id="reply-click"
-                                                                           href="{% url 'add_reply' pk=comment.pk %}">{{ comment.get_comment_reply.count }}
-                                        Replys</a></div>
+                                    <div class="col-sm-7 class-rply " }>
+                                        <a class="hgt" id="reply-click" href="{% url 'add_reply' pk=comment.pk %}">
+                                            {{ comment.get_comment_reply.count }}
+                                            Replys</a>
+
+                                        <span >
+                                            <div class="class-replys" style="display: none;">
+
+                                                {% for reply in comment.get_comment_reply.all %}
+                                                    <div class="" align="left">
+                                                        <span><strong>posted by:</strong>{{ reply.username }}</span></br>
+                                                         <span>on:-{{ reply.created_date }}</span></br>
+                                                        {{ reply.text|linebreaks }}
+                                                    </div>
+                                                {% endfor %}
+                                                <p class="see_less">see less</p>
+                                            </div>
+
+                                            <div>
+                                                <p class="see_more">see more..</p>
+                                                <input type="text" class="txt-class" id="txt-reply_{{ comment.pk }}">
+                                                <button type="submit" data-id="{{ comment.pk }}"
+                                                    class="save btn btn-default reply_button" id="reply_save_button">Send Reply
+                                            </button>
+                                            </div>
+                                        </span>
+
+
+                                    </div>
                                 </div>
                             {% empty %}
                                 <p>No comments here yet :(</p>
                             {% endfor %}
 
-
-
-                            <div id='comment-div' style="display: none;">
-
-                                <div class="row">
-                                    <div class="col-sm-2"></div>
-                                    <div class="col-sm-8">
-                                        Add Comment:<input type="text" class="txt-class" id="txt-id">
-                                        <button type="submit" class="save btn btn-default" id="id_save_button">Send
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-2"></div>
-                                </div>
-                            </div>
                         </div><!-- blog-info -->
+
+                        <!--   <div id='comment-div' style="display: none;">
+
+                               <div class="row">
+                                   <div class="col-sm-2"></div>
+                                   <div class="col-sm-8">
+                                       Add Comment:<input type="text" class="txt-class" id="txt-id">
+                                       <button type="submit" class="save btn btn-default" id="id_save_button">Send
+                                       </button>
+                                   </div>
+                                   <div class="col-sm-2"></div>
+                               </div>
+                           </div>
+                           -->
 
                         <div></div>
 
                         <!-- add-comment -->
-                    <div class="add-comment">
+                        <div class="add-comment">
 
                             <div id='comment-div' style="display: none;">
                                 <div class="row">
@@ -81,8 +108,8 @@
                                     <div class="col-sm-2"></div>
                                 </div>
                             </div>
-                             <div class="div-btn">
-                                 <button class="btn btn-default" id="btn-id">ADD CMNT</button>
+                            <div class="div-btn">
+                                <button class="btn btn-default" id="btn-id1">Add Comment</button>
                             </div>
 
                         </div>
@@ -101,31 +128,79 @@
     <script type="text/javascript">
         $('#btn-id').on('click', function () {
             $('#comment-div').css("display", "block");
-            if( $('#txt-id').val())
-                $('#txt-id').val()=''
+            $('#txt-id').focus()
+
+        });
+        $('#btn-id1').on('click', function () {
+            $('#comment-div').css("display", "block");
+            $('#txt-id').focus()
+
         });
 
+        $('.see_more').on('click', function () {
+            //alert("qwertyui");
+            $('.class-replys').css("display", "block");
+            //$('.see-more').css("display", "none");
+        });
+        $('.see_less').on('click', function () {
+            //alert("qwertyui");
+            $('.class-replys').css("display", "none");
+            $('.see-more').css  ("display", "none");
+        });
+
+        //ajax for comments
         $("#id_save_button").on('click', function () {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'add_comment_to_blog' object.pk %}",
-                data: {
-                    'blog_id':{{ object.pk }},
-                    'comment': $('#txt-id').val(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                dataType: 'json',
-                success: function (data) {
-                    if (data['comment']) {
+            var cmt=$('#txt-id').val();
+            if ($('#txt-id').val() != '') {
+                $('#txt-id').val("");
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'add_comment_to_blog' object.pk %}",
+                    data: {
+                        'blog_id':{{ object.pk }},
+                        'comment': cmt,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data['comment']) {
 
-                        temp = '<div class="row comment"><div class="col-sm-3"></div><h3></h3><div class="col-sm-4" align="left"><div><span><h3>'+data['comment']+'</h3></span><span>   </span></span> <span>'+'now'+'</span></div>'+data['comment']+' </div> <div class="col-sm-5 class-rply " }><a class="hgt" id="reply-click"href="">0Replys</a></div> </div>'
+                            temp = '<div class="row comment"><div class="col-sm-3"></div><h3></h3><div class="col-sm-4" align="left"><div><span><h3>' + data['comment'] + '</h3></span><span>   </span></span> <span>' + 'now' + '</span></div>' + data['comment'] + ' </div> <div class="col-sm-5 class-rply " }><a class="hgt" id="reply-click"href="">0Replys</a></div> </div>'
 
-                       $(".blog-info").append(temp);
+                            $(".comment-section").append(temp);
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
+        //ajax for reply
+        $(".reply_button").on('click', function () {alert($(this).attr("data-id"))
+            var parent_id = $(this).attr("data-id");
+            //alert(i);
+            if ($('#txt-reply_'+parent_id).val() != '') {
+                    alert($('#txt-reply_'+parent_id).val())
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'post_reply' object.pk %}",
+                    data: {
+                        'parent_id': parent_id,
+                        'reply': $('#txt-reply_'+parent_id).val(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        //if (data['comment']) {
+
+                        //  temp = '<div class="row comment"><div class="col-sm-3"></div><h3></h3><div class="col-sm-4" align="left"><div><span><h3>'+data['comment']+'</h3></span><span>   </span></span> <span>'+'now'+'</span></div>'+data['comment']+' </div> <div class="col-sm-5 class-rply " }><a class="hgt" id="reply-click"href="">0Replys</a></div> </div>'
+
+                        //$(".comment-section").append(temp);
+                        //     }
+                        location.reload();
+                    }
+                });
+            }
+        });
 
     </script>
 

@@ -1,7 +1,8 @@
 .box{
 	height: 
 }
-.image-height{
+
+.img-height{
 	height: 200px
 }
 
@@ -16,4 +17,14 @@
 	margin-right: 200px;
 	height: 88px;
 	width: 300px;
+}
+.errorlist{
+	color:red;
+}
+.a-class{
+	color:darkolivegreen;
+}
+
+.blog-info{
+	margin-top:10 px;
 }

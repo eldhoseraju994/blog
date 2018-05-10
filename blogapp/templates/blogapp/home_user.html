@@ -1,40 +1,44 @@
 {% extends 'blogapp/base.html' %}
 
-	{% block content %}
+{% block content %}
+
+    <section class="blog-area section">
+        <div class="container">
+
+            <div class="row">
 
 
-	<section class="blog-area section">
-		<div class="container">
+                {% for post in blog %}
+                    <div class="col-sm-4">
 
-			<div class="row">
+                        <div class="img-responsive image-height"><a href="{% url 'blog_detail' pk=post.pk %}"><img
+                                src="{{ post.img.url }}" alt="Blog Image" width="100%" class="img-height"></a>
+                           <a href="{% url 'blog_edit' post.pk %}" class="a-class">Edit  </a>
+                            <a href="{% url 'blog_delete' post.pk %}" class="a-class" style="{color: darkgreen}">Delete</a>
 
-				
-						
-							{% for post in blog %}
-						<div class="col-sm-4">
+                        </div>
 
-							  	<div class="img-responsive image-height"><a href="{%  url 'blog_detail' pk=post.pk %}"><img src="{{post.img.url}}" alt="Blog Image"  width="100%"></a></div>
-								
-								<div class="blog-info">
 
-									<h4 class="title"><a href="#">{{ post.title }}</a></h4>
-									<h3 class="author">{{post.author}}</h3>
+                        <div class="blog-info">
 
-									<ul class="post-footer">
-										<!--<li><a href="#"><i class="ion-heart"></i>57</a></li>-->
-										<li>Comments: {{post.get_blog_comment.count}}</a></li>
-										<!--<li><a href="#"><i class="ion-eye"></i>138</a></li>-->
-									</ul>
+                            <h4 class="title">{{ post.title }}</h4>
+                            <h3 class="author">{{ post.author }}</h3>
 
-								</div><!-- blog-info -->
-						</div>
+                            <ul class="post-footer">
+                                <!--<li><a href="#"><i class="ion-heart"></i>57</a></li>-->
+                                <li>Comments: {{ post.get_blog_comment.count }}</a></li>
+                                <!--<li><a href="#"><i class="ion-eye"></i>138</a></li>-->
+                            </ul>
 
-  							{% endfor %}
-						
-				</div><!-- col-lg-4 col-md-6 -->
-			</div>
-		</div>
-	</section>
+                        </div><!-- blog-info -->
+                    </div>
+
+                {% endfor %}
+
+            </div><!-- col-lg-4 col-md-6 -->
+        </div>
+        </div>
+    </section>
 {% endblock %}
 
 
@@ -55,9 +59,9 @@
 
 
 
-	  
 
 
 
 
-	<!--fields = ('title', 'author','caption','text','img')
+
+<!--fields = ('title', 'author','caption','text','img')
