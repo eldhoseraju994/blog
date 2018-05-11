@@ -175,11 +175,11 @@
         });
 
         //ajax for reply
-        $(".reply_button").on('click', function () {alert($(this).attr("data-id"))
+        $(".reply_button").on('click', function () {
             var parent_id = $(this).attr("data-id");
             //alert(i);
             if ($('#txt-reply_'+parent_id).val() != '') {
-                    alert($('#txt-reply_'+parent_id).val())
+
                 $.ajax({
                     type: "POST",
                     url: "{% url 'post_reply' object.pk %}",

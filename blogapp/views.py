@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views import View
 
 
-from .models import Blog, Comment, UserProfile
+from .models import Blog, Comment, UserProfile ,Registration
 from .forms import MyRegistrationForm, NewBlogForm, CommentForm, LoginForm, ReplyForm
 from django.shortcuts import redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -18,8 +18,18 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout
 
+from django.core.mail import send_mail
+from django.core.signing import Signer
+from django.template.loader import render_to_string
+
+
 from django.views.generic import TemplateView
 from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+
 
 def blogs(request):
     context = {}
@@ -28,6 +38,13 @@ def blogs(request):
     return render(request, 'blogapp/home_user.html', context)
     # return render(request, 'blogapp/home.html', {})
 
+@login_required
+def home(request):
+    return render(request, 'user/home_social.html')
+
+
+
+
 
 def Add_User(request):
     if request.method == "POST":
@@ -35,14 +52,46 @@ def Add_User(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            post.is_active=False
             post.save()
+            signer = Signer()
+
+            signed_value = signer.sign(post.username)
+            key = ''.join(signed_value.split(':')[1:])
+            reg_obj = Registration.objects.create(user=post, key=key)
+            msg_html = render_to_string('blogapp/mail_validation.html', {'key': key})
             #import pdb;pdb.set_trace()
-            send_mail('Acount Activated', 'post.author Activated succesfully', 'eldhosetemp@gmail.com', [post.username ],fail_silently=False)
-            return render(request, 'blogapp/login.html', {'form': LoginForm()})
+            send_mail("123", "123", 'anjitha.test@gmail.com', [post.username ], html_message=msg_html, fail_silently=False)
+            #send_mail('Acount Activated', 'post.author Activated succesfully', 'eldhosetemp@gmail.com', [post.username ], html_message=msg_html, fail_silently=False)
+            return render(request, 'blogapp/check_mail.html',)
 
     else:
         form = MyRegistrationForm()
     return render(request, 'blogapp/UserRegistration.html', {'form': form})
+
+
+class RegistrationSuccess(TemplateView):
+    print("class in")
+    template_name = 'blogapp/registration_success.html'
+
+    def get_context_data(self, **kwargs):
+        print("method innnnnn")
+        context = super(RegistrationSuccess, self).get_context_data(**kwargs)
+        key = self.kwargs.get("key")
+        try:
+            reg_obj = Registration.objects.get(key=key)
+            print("reg_obj created innnn")
+            reg_obj.user.is_active = True
+            reg_obj.save()
+            reg_obj.user.save()
+            context.update({'user': reg_obj, 'status': True})
+
+
+        except Registration.DoesNotExist:
+            print("excpet case deactivate false innnnnn")
+            context.update({'status': False})
+
+        return context
 
 
 class LoginView(FormView):

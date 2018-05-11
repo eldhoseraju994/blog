@@ -20,5 +20,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('', include('blogapp.urls')),
+    path('oauth/', include('social_django.urls', namespace='social')),
+    path('oauth/', include('social_django.urls', namespace='social')),
     path('admin/', admin.site.urls),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

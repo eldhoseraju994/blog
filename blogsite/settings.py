@@ -25,7 +25,7 @@ SECRET_KEY = 'y*axgb&#co(qhf1oeia$ttr&-(&2-0xns2*fz=*0r9vhl9@k6t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', '*']
 
 
 # Application definition
@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blogapp',
+    'social_django',
+
 ]
 
 MIDDLEWARE = [
@@ -57,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware',  # <-
 ]
 
 ROOT_URLCONF = 'blogsite.urls'
@@ -72,6 +76,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',  # <--
+                'social_django.context_processors.login_redirect',  # <--
             ],
         },
     },
@@ -89,6 +96,14 @@ WSGI_APPLICATION = 'blogsite.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 DATABASES = {
     'default': {
@@ -144,11 +159,19 @@ MEDIA_URL = '/media/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/user/login/'
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'developer.realtordaddy@gmail.com'
-EMAIL_HOST_PASSWORD = 'dfvyubjkcjppdtvd'
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'anjitha.test@gmail.com'
+EMAIL_HOST_PASSWORD = 'password@1234'
+DEFAULT_FROM_EMAIL = 'anjitha.test@gmail.com'
 
 LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_FACEBOOK_KEY = '222236221875598'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '74a29b1b086e61669046a0f1faba85f1'  # App Secret
+
+SOCIAL_AUTH_GITHUB_KEY = '0dba7ad914975f26644b'
+SOCIAL_AUTH_GITHUB_SECRET = '4f918e0a9c173fbc81db86a1610a42828a55d49a'
