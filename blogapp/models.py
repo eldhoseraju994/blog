@@ -32,8 +32,6 @@ class Blog(models.Model):
 
 class UserProfile(AbstractUser):
     """docstring for Register"""
-
-
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     # user = models.CharField(max_length=50,blank=True, null=True)
