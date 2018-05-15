@@ -13,6 +13,20 @@ from django.contrib.auth.models import AbstractUser
      user_bank_ifsc_code = models.CharField(max_length=30,null=True)
      user_byt_balance = models.IntegerField(max_length=20, null=True)"""
 
+class UserProfile(AbstractUser):
+    """docstring for Register"""
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    # user = models.CharField(max_length=50,blank=True, null=True)
+    # password = models.CharField(max_length=50,blank=True, null=True)
+    status = models.CharField(max_length=1, blank=True, null=True)
+
+
+    def publish(self):
+        self.save()
+
+    def __str__(self):
+        return self.username
 
 class Blog(models.Model):
     title = models.CharField(max_length=200)
@@ -21,6 +35,7 @@ class Blog(models.Model):
     author = models.CharField(max_length=100)
     caption = models.CharField(max_length=200)
     text = models.TextField()
+    super_obj = models.ForeignKey(UserProfile,  related_name='super_id', max_length=50, blank=True, null=True, on_delete=models.CASCADE)
 
     def publish(self):
         self.published_date = timezone.now()
@@ -30,19 +45,7 @@ class Blog(models.Model):
         return self.title
 
 
-class UserProfile(AbstractUser):
-    """docstring for Register"""
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True)
-    # user = models.CharField(max_length=50,blank=True, null=True)
-    # password = models.CharField(max_length=50,blank=True, null=True)
-    status = models.CharField(max_length=1, blank=True, null=True)
 
-    def publish(self):
-        self.save()
-
-    def __str__(self):
-        return self.username
 
 class Registration(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)

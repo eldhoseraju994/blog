@@ -119,30 +119,7 @@ class LogoutView(FormView):
         return HttpResponseRedirect('/')
 
 
-class BlogDeleteView(View):
-    Model = Blog
-    #template_name = 'blogapp/login.html'
-    success_url = '.'
 
-    def get(self, request, *args,** kwargs):
-        #article = get_object_or_404(id=request.POST['article_id'])
-        blog_obj = Blog.objects.get(pk=self.kwargs.get('pk'))
-        print (("deletinggggggggggggggggggggggggggg", blog_obj))
-        blog_obj.delete()
-        return HttpResponseRedirect('/')
-
-"""class BlogEdit(FormView):
-    Model = Blog
-    template_name = ''
-    def get(self ,request, *args,** kwargs):
-        blog_obj = Blog.objects.get(pk=self.kwargs.get(pk))
-        return render(request, 'blogapp/blog_edit.html', {'blog':blog_obj})"""
-
-class BlogEdit(UpdateView):
-    model = Blog
-    template_name = 'blogapp/blog_edit.html'
-    fields = ['title', 'author', 'caption', 'text', 'img']
-    success_url = '/'
 
 # class BlogUpdate(UpdateView):
 #     model = Blog
@@ -175,7 +152,7 @@ class AddCommentToBlogView(LoginRequiredMixin, View):
             json.dumps({'comment': obj.text, 'date': str(obj.created_date), 'username': obj.username.username}),
             content_type="application/json")
 
-
+""""""
 class AddReplyToComment(CreateView):
     model = Comment
     form_class = CommentForm
@@ -223,6 +200,11 @@ class NewBlogView(SuperuserRequiredMixin,CreateView):
     #template_name = u"path/to/template.html"
     template_name = 'blogapp/BlogNew.html'
     success_url = '/'
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.super_obj = self.request.user
+        self.object.save()
+        return HttpResponseRedirect('/')
 
 
 class BlogDetailView(LoginRequiredMixin, DetailView):
@@ -231,6 +213,47 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
 
     def form_valid(self, form):
         return HttpResponseRedirect('blogapp/detail_view_blog.html')
+
+class BlogDeleteView(View):
+    Model = Blog
+    #template_name = 'blogapp/login.html'
+    success_url = '.'
+
+    def get(self, request, *args,** kwargs):
+        #article = get_object_or_404(id=request.POST['article_id'])
+        blog_obj = Blog.objects.get(pk=self.kwargs.get('pk'))
+        #print (("deletinggggggggggggggggggggggggggg", blog_obj))
+        blog_obj.delete()
+        return HttpResponseRedirect('/')
+
+"""class BlogEdit(FormView):
+    Model = Blog
+    template_name = ''
+    def get(self ,request, *args,** kwargs):
+        blog_obj = Blog.objects.get(pk=self.kwargs.get(pk))
+        return render(request, 'blogapp/blog_edit.html', {'blog':blog_obj})"""
+
+class BlogEdit(UpdateView):
+    model = Blog
+    template_name = 'blogapp/blog_edit.html'
+    fields = ['title', 'author', 'caption', 'text', 'img']
+    success_url = '/'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 """def add_comment_to_blog(request, pk):
